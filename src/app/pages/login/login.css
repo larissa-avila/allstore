@@ -1,0 +1,136 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.pagina {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #FFD6CE 0%, #f5b8ac 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 20px;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.logo {
+    font-size: 3.2rem;
+    font-weight: 900;
+    letter-spacing: 8px;
+    color: #1a1a1a;
+    font-family: 'Georgia', serif;
+    text-transform: uppercase;
+}
+
+.logo-sub {
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.card {
+    background: white;
+    border-radius: 24px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.titulo {
+    text-align: center;
+    font-size: 1.1rem;
+    letter-spacing: 4px;
+    color: #888;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+.divider {
+    width: 40px;
+    height: 3px;
+    background: #FFD6CE;
+    border-radius: 2px;
+    margin: 0 auto;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campo label {
+    font-size: 0.8rem;
+    color: #999;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.campo input {
+    padding: 14px 16px;
+    border: 1.5px solid #eee;
+    border-radius: 12px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+    background: #fafafa;
+}
+
+.campo input:focus {
+    border-color: #FFD6CE;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(255, 214, 206, 0.2);
+}
+
+.btn-entrar {
+    background: linear-gradient(135deg, #FFD6CE, #f0b8ac);
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 4px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(255, 214, 206, 0.5);
+}
+
+.btn-entrar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 214, 206, 0.7);
+}
+
+.btn-entrar:active {
+    transform: translateY(0);
+}
+
+.btn-entrar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.erro {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    text-align: center;
+    background: #fdf0f0;
+    padding: 10px;
+    border-radius: 8px;
+}

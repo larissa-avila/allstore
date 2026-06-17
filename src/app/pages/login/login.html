@@ -1,0 +1,29 @@
+<div class="pagina">
+    <div class="logo-container">
+        <h1 class="logo">All Store</h1>
+        <span class="logo-sub">sua loja favorita</span>
+    </div>
+
+    <div class="card">
+        <h2 class="titulo">Entrar</h2>
+        <div class="divider"></div>
+
+        <div class="campo">
+            <label for="username">Usuário</label>
+            <input id="username" type="text" placeholder="Digite seu usuário" [(ngModel)]="username" />
+        </div>
+
+        <div class="campo">
+            <label for="password">Senha</label>
+            <input id="password" type="password" placeholder="Digite sua senha" [(ngModel)]="password" />
+        </div>
+
+        @if (erro) {
+        <p class="erro">{{ erro }}</p>
+        }
+
+        <button class="btn-entrar" (click)="entrar()" [disabled]="carregando">
+            {{ carregando ? 'Entrando...' : 'Entrar' }}
+        </button>
+    </div>
+</div>
