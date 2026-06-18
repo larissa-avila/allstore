@@ -1,4 +1,16 @@
 {
-  "products": [],
-  "cart": []
+  "products": [
+    {
+      "title": "Tenis Teste",
+      "category": "mens-shoes",
+      "description": "Teste",
+      "price": 299.99,
+      "thumbnail": "https://placehold.co/300x300?text=Sem+Imagem",
+      "userId": 1,
+      "createdAt": "2026-06-18T00:03:25.636Z",
+      "id": "79hioYHDtZ4"
+    }
+  ],
+  "cart": [],
+  "$schema": "./node_modules/json-server/schema.json"
 }

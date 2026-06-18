@@ -1,0 +1,128 @@
+<div class="pagina">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <button class="btn-voltar" (click)="cancelar()">
+        <span class="material-icons">arrow_back</span>
+      </button>
+      <h1 class="logo">All Store</h1>
+      <span class="badge-admin">Admin</span>
+    </div>
+  </header>
+
+  <!-- Conteúdo -->
+  <div class="conteudo">
+    <div class="form-container">
+
+      <div class="form-header">
+        <h2 class="form-titulo">Cadastrar Novo Produto</h2>
+        <p class="form-subtitulo">Preencha as informações do produto abaixo</p>
+      </div>
+
+      <div class="form-body">
+
+        <!-- Coluna esquerda -->
+        <div class="form-fields">
+
+          <div class="campo">
+            <label>Nome <span class="obrigatorio">*</span></label>
+            <input
+              type="text"
+              placeholder="Ex: Tênis Casual Branco"
+              [(ngModel)]="produto.title"
+            />
+          </div>
+
+          <div class="campo">
+            <label>Categoria <span class="obrigatorio">*</span></label>
+            <select [(ngModel)]="produto.category">
+              <option value="" disabled>Selecione uma categoria</option>
+              @for (cat of categories; track cat.slug) {
+                <option [value]="cat.slug">{{ cat.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="campo">
+            <label>Descrição</label>
+            <textarea
+              placeholder="Descreva o produto..."
+              [(ngModel)]="produto.description"
+              rows="4"
+            ></textarea>
+          </div>
+
+          <div class="campo">
+            <label>Preço (R$) <span class="obrigatorio">*</span></label>
+            <input
+              type="number"
+              placeholder="0,00"
+              [(ngModel)]="produto.price"
+              min="0"
+            />
+          </div>
+
+          <div class="campo">
+            <label>URL da Imagem</label>
+            <input
+              type="text"
+              placeholder="https://..."
+              [(ngModel)]="produto.imageUrl"
+            />
+          </div>
+
+        </div>
+
+        <!-- Coluna direita - preview -->
+        <div class="form-preview">
+          <label>Preview da Imagem</label>
+          <div class="preview-container">
+            <img [src]="imagePreview" alt="Preview" class="preview-img" />
+          </div>
+          <p class="preview-hint">A imagem atualiza automaticamente</p>
+        </div>
+
+      </div>
+
+      <!-- Mensagens -->
+      @if (erro) {
+        <div class="mensagem erro-msg">
+          <span class="material-icons">error_outline</span>
+          {{ erro }}
+        </div>
+      }
+
+      @if (sucesso) {
+        <div class="mensagem sucesso-msg">
+          <span class="material-icons">check_circle</span>
+          Produto cadastrado com sucesso! Redirecionando...
+        </div>
+      }
+
+      <!-- Botões -->
+      <div class="form-actions">
+        <button class="btn-cancelar" (click)="cancelar()" [disabled]="salvando">
+          Cancelar
+        </button>
+        <button class="btn-salvar" (click)="salvar()" [disabled]="salvando">
+          @if (salvando) {
+            <span class="material-icons spinning">sync</span>
+            Salvando...
+          } @else {
+            <span class="material-icons">save</span>
+            Salvar Produto
+          }
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span class="footer-logo">AllStore</span>
+    <span class="footer-copy">© 2026 All rights reserved</span>
+  </footer>
+
+</div>

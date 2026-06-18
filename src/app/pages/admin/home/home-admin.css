@@ -21,7 +21,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
 .header-left {
@@ -80,7 +80,6 @@
 .conteudo {
   display: flex;
   flex: 1;
-  gap: 0;
 }
 
 /* Sidebar */
@@ -94,11 +93,6 @@
   top: 57px;
   height: calc(100vh - 57px);
   overflow-y: auto;
-}
-
-.categorias-card {
-  display: flex;
-  flex-direction: column;
 }
 
 .categorias-titulo {
@@ -150,6 +144,52 @@
   gap: 16px;
 }
 
+/* Abas */
+.abas {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0;
+}
+
+.aba-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #999;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+
+.aba-btn:hover {
+  color: #1a1a1a;
+}
+
+.aba-btn.ativo {
+  color: #1a1a1a;
+  font-weight: 700;
+  border-bottom-color: #f0a090;
+}
+
+.aba-count {
+  background: #f0f0f0;
+  color: #666;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.aba-btn.ativo .aba-count {
+  background: #FFD6CE;
+  color: #1a1a1a;
+}
+
 /* Topo */
 .topo-principal {
   display: flex;
@@ -164,7 +204,7 @@
   background: white;
   border-radius: 12px;
   padding: 0 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   border: 1.5px solid #eee;
   transition: border 0.2s;
 }
@@ -193,8 +233,8 @@
   border: none;
   color: #aaa;
   cursor: pointer;
-  font-size: 0.9rem;
-  padding: 4px;
+  display: flex;
+  align-items: center;
 }
 
 .btn-adicionar {
@@ -208,6 +248,9 @@
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .btn-adicionar:hover {
@@ -232,14 +275,33 @@
   background: white;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: all 0.2s;
   cursor: pointer;
+  position: relative;
 }
 
 .produto-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.produto-card.local {
+  border: 2px solid #FFD6CE;
+}
+
+.badge-local {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #FFD6CE;
+  color: #1a1a1a;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  z-index: 1;
+  letter-spacing: 0.5px;
 }
 
 .produto-img-container {
@@ -267,7 +329,7 @@
   left: 0;
   right: 0;
   padding: 6px 8px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.4));
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.4));
 }
 
 .produto-categoria {
@@ -279,6 +341,9 @@
 
 .produto-info {
   padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .produto-nome {
@@ -287,7 +352,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 8px;
 }
 
 .produto-bottom {
@@ -305,6 +369,56 @@
 .produto-rating {
   font-size: 0.75rem;
   color: #888;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.acoes {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-editar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #f0f5ff;
+  color: #3498db;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-editar:hover {
+  background: #3498db;
+  color: white;
+}
+
+.btn-deletar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #fdf0f0;
+  color: #e74c3c;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-deletar:hover {
+  background: #e74c3c;
+  color: white;
 }
 
 /* Loading */
@@ -328,12 +442,18 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .vazio {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 60px;
+  gap: 16px;
   color: #999;
 }
 
@@ -354,6 +474,8 @@
   font-size: 0.9rem;
   color: #555;
   transition: all 0.15s;
+  display: flex;
+  align-items: center;
 }
 
 .pag-btn:hover:not(:disabled) {

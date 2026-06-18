@@ -1,0 +1,171 @@
+<div class="pagina">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <h1 class="logo">All Store</h1>
+      <span class="badge-admin">Admin</span>
+    </div>
+    <div class="header-right">
+      <span class="usuario">
+        <span class="material-icons" style="font-size: 18px; vertical-align: middle;">person</span>
+        {{ getUser()?.firstName }} {{ getUser()?.lastName }}
+      </span>
+      <button class="btn-logout" (click)="logout()">Sair</button>
+    </div>
+  </header>
+
+  <!-- Conteúdo -->
+  <div class="conteudo">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2 class="categorias-titulo">Categorias</h2>
+      <div class="categorias-lista">
+        <button class="categoria-btn" [class.ativo]="selectedCategory === ''" (click)="filterByCategory('')">
+          Todas
+        </button>
+        @for (cat of categories; track cat.slug) {
+          <button class="categoria-btn" [class.ativo]="selectedCategory === cat.slug" (click)="filterByCategory(cat.slug)">
+            {{ cat.name }}
+          </button>
+        }
+      </div>
+    </aside>
+
+    <!-- Coluna principal -->
+    <div class="coluna-principal">
+
+      <!-- Abas -->
+      <div class="abas">
+        <button class="aba-btn" [class.ativo]="abaAtiva === 'todos'" (click)="mudarAba('todos')">
+          <span class="material-icons">inventory_2</span>
+          Todos os Produtos
+          <span class="aba-count">{{ allProducts.length }}</span>
+        </button>
+        <button class="aba-btn" [class.ativo]="abaAtiva === 'meus'" (click)="mudarAba('meus')">
+          <span class="material-icons">store</span>
+          Meus Produtos
+          <span class="aba-count">{{ myProducts.length }}</span>
+        </button>
+      </div>
+
+      <!-- Topo busca + botão -->
+      <div class="topo-principal">
+        <div class="busca-container">
+          <span class="material-icons busca-icone">search</span>
+          <input
+            type="text"
+            class="busca-input"
+            placeholder="Buscar produto..."
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="search()"
+          />
+          @if (searchQuery) {
+            <button class="busca-clear" (click)="searchQuery = ''; search()">
+              <span class="material-icons">close</span>
+            </button>
+          }
+        </div>
+        <button class="btn-adicionar" (click)="goToAddProduct()">
+          <span class="material-icons">add</span>
+          Novo Produto
+        </button>
+      </div>
+
+      <!-- Contador -->
+      @if (!carregando) {
+        <div class="resultado-info">{{ filteredProducts.length }} produtos encontrados</div>
+      }
+
+      <!-- Grid -->
+      @if (carregando) {
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Carregando produtos...</p>
+        </div>
+      } @else if (paginatedProducts.length === 0) {
+        <div class="vazio">
+          <span class="material-icons" style="font-size: 48px; color: #ddd;">inventory_2</span>
+          <p>Nenhum produto encontrado.</p>
+          @if (abaAtiva === 'meus') {
+            <button class="btn-adicionar" (click)="goToAddProduct()">
+              <span class="material-icons">add</span>
+              Adicionar primeiro produto
+            </button>
+          }
+        </div>
+      } @else {
+        <div class="produtos-grid">
+          @for (produto of paginatedProducts; track produto.id) {
+            <div class="produto-card" [class.local]="produto.isLocal">
+
+              @if (produto.isLocal) {
+                <span class="badge-local">Meu produto</span>
+              }
+
+              <div class="produto-img-container">
+                <img [src]="produto.thumbnail" [alt]="produto.title" class="produto-img" />
+                <div class="produto-overlay">
+                  <span class="produto-categoria">{{ produto.category }}</span>
+                </div>
+              </div>
+
+              <div class="produto-info">
+                <p class="produto-nome">{{ produto.title }}</p>
+                <div class="produto-bottom">
+                  <p class="produto-preco">R$ {{ produto.price }}</p>
+                  @if (produto.rating) {
+                    <span class="produto-rating">
+                      <span class="material-icons" style="font-size:14px">star</span>
+                      {{ produto.rating }}
+                    </span>
+                  }
+                </div>
+
+                @if (produto.isLocal && produto.userId === getUser()?.id) {
+                  <div class="acoes">
+                    <button class="btn-editar" (click)="editProduct(produto.id)">
+                      <span class="material-icons">edit</span>
+                      Editar
+                    </button>
+                    <button class="btn-deletar" (click)="deleteProduct(produto.id)">
+                      <span class="material-icons">delete</span>
+                      Excluir
+                    </button>
+                  </div>
+                }
+              </div>
+
+            </div>
+          }
+        </div>
+
+        <!-- Paginação -->
+        @if (totalPages > 1) {
+          <div class="paginacao">
+            <button class="pag-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
+              <span class="material-icons">chevron_left</span>
+            </button>
+            @for (page of getPages(); track page) {
+              <button class="pag-btn" [class.ativo]="page === currentPage" (click)="goToPage(page)">
+                {{ page }}
+              </button>
+            }
+            <button class="pag-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">
+              <span class="material-icons">chevron_right</span>
+            </button>
+          </div>
+        }
+      }
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span class="footer-logo">AllStore</span>
+    <span class="footer-copy">© 2026 All rights reserved</span>
+  </footer>
+
+</div>
