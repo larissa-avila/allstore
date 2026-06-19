@@ -57,4 +57,12 @@ export class ApiService {
     removeFromCart(id: number): Observable<any> {
         return this.http.delete(`${this.localUrl}/cart/${id}`);
     }
+
+    updateProduct(id: number, product: any): Observable<any> {
+        return this.http.put(`${this.localUrl}/products/${id}`, product);
+    }
+
+    getLocalProductById(id: number): Observable<any> {
+        return this.http.get(`${this.localUrl}/products/${id}`);
+    }
 }

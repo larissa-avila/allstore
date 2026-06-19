@@ -1,4 +1,4 @@
-<div class="pagina">
+<div class="pagina" (click)="dropdownAberto = false">
 
   <!-- Header -->
   <header class="header">
@@ -7,122 +7,132 @@
         <span class="material-icons">arrow_back</span>
       </button>
       <h1 class="logo">All Store</h1>
+    </div>
+    <div class="header-right">
       <span class="badge-admin">Admin</span>
     </div>
   </header>
 
-  <!-- Conteúdo -->
-  <div class="conteudo">
-    <div class="form-container">
-
-      <div class="form-header">
-        <h2 class="form-titulo">Cadastrar Novo Produto</h2>
-        <p class="form-subtitulo">Preencha as informações do produto abaixo</p>
-      </div>
-
-      <div class="form-body">
-
-        <!-- Coluna esquerda -->
-        <div class="form-fields">
-
-          <div class="campo">
-            <label>Nome <span class="obrigatorio">*</span></label>
-            <input
-              type="text"
-              placeholder="Ex: Tênis Casual Branco"
-              [(ngModel)]="produto.title"
-            />
-          </div>
-
-          <div class="campo">
-            <label>Categoria <span class="obrigatorio">*</span></label>
-            <select [(ngModel)]="produto.category">
-              <option value="" disabled>Selecione uma categoria</option>
-              @for (cat of categories; track cat.slug) {
-                <option [value]="cat.slug">{{ cat.name }}</option>
-              }
-            </select>
-          </div>
-
-          <div class="campo">
-            <label>Descrição</label>
-            <textarea
-              placeholder="Descreva o produto..."
-              [(ngModel)]="produto.description"
-              rows="4"
-            ></textarea>
-          </div>
-
-          <div class="campo">
-            <label>Preço (R$) <span class="obrigatorio">*</span></label>
-            <input
-              type="number"
-              placeholder="0,00"
-              [(ngModel)]="produto.price"
-              min="0"
-            />
-          </div>
-
-          <div class="campo">
-            <label>URL da Imagem</label>
-            <input
-              type="text"
-              placeholder="https://..."
-              [(ngModel)]="produto.imageUrl"
-            />
-          </div>
-
-        </div>
-
-        <!-- Coluna direita - preview -->
-        <div class="form-preview">
-          <label>Preview da Imagem</label>
-          <div class="preview-container">
-            <img [src]="imagePreview" alt="Preview" class="preview-img" />
-          </div>
-          <p class="preview-hint">A imagem atualiza automaticamente</p>
-        </div>
-
-      </div>
-
-      <!-- Mensagens -->
-      @if (erro) {
-        <div class="mensagem erro-msg">
-          <span class="material-icons">error_outline</span>
-          {{ erro }}
-        </div>
-      }
-
-      @if (sucesso) {
-        <div class="mensagem sucesso-msg">
-          <span class="material-icons">check_circle</span>
-          Produto cadastrado com sucesso! Redirecionando...
-        </div>
-      }
-
-      <!-- Botões -->
-      <div class="form-actions">
-        <button class="btn-cancelar" (click)="cancelar()" [disabled]="salvando">
-          Cancelar
-        </button>
-        <button class="btn-salvar" (click)="salvar()" [disabled]="salvando">
-          @if (salvando) {
-            <span class="material-icons spinning">sync</span>
-            Salvando...
-          } @else {
-            <span class="material-icons">save</span>
-            Salvar Produto
-          }
-        </button>
-      </div>
-
-    </div>
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <span (click)="cancelar()" class="breadcrumb-link">Produtos</span>
+    <span class="material-icons" style="font-size:16px;color:#bbb">chevron_right</span>
+    <span>{{ isEdicao ? 'Editar Produto' : 'Novo Produto' }}</span>
   </div>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <span class="footer-logo">AllStore</span>
-    <span class="footer-copy">© 2026 All rights reserved</span>
-  </footer>
+  <!-- Conteúdo -->
+  <div class="conteudo">
+
+    <!-- Coluna form -->
+    <div class="form-section">
+      <div class="section-card">
+        <h3 class="section-titulo">Informações Básicas</h3>
+
+        <div class="campo">
+          <label>Nome do Produto <span class="obrigatorio">*</span></label>
+          <input type="text" placeholder="Ex: Tênis Casual Branco" [(ngModel)]="produto.title" />
+        </div>
+
+        <div class="campo">
+          <label>Categoria <span class="obrigatorio">*</span></label>
+          <div class="dropdown-container" [class.aberto]="dropdownAberto"
+            (click)="toggleDropdown(); $event.stopPropagation()">
+            <div class="dropdown-selected">
+              <span [class.placeholder]="!produto.category">
+                {{ getCategoryName() || 'Selecione uma categoria' }}
+              </span>
+              <span class="material-icons dropdown-arrow" [class.aberto]="dropdownAberto">expand_more</span>
+            </div>
+
+            @if (dropdownAberto) {
+            <div class="dropdown-panel" (click)="$event.stopPropagation()">
+              <div class="dropdown-busca">
+                <span class="material-icons">search</span>
+                <input type="text" placeholder="Buscar categoria..." [(ngModel)]="categoriaSearch"
+                  (ngModelChange)="filterCategories()" />
+              </div>
+              <div class="dropdown-lista">
+                @for (cat of categoriasFiltradas; track cat.slug) {
+                <div class="dropdown-item" [class.selecionado]="produto.category === cat.slug"
+                  (click)="selectCategory(cat.slug)">
+                  {{ cat.name }}
+                </div>
+                }
+                @if (categoriasFiltradas.length === 0) {
+                <div class="dropdown-vazio">Nenhuma categoria encontrada</div>
+                }
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Descrição</label>
+          <textarea placeholder="Descreva o produto..." [(ngModel)]="produto.description" rows="4"></textarea>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3 class="section-titulo">Preço</h3>
+        <div class="campo">
+          <label>Valor (R$) <span class="obrigatorio">*</span></label>
+          <div class="input-prefix">
+            <span class="prefix">R$</span>
+            <input type="number" placeholder="0,00" [(ngModel)]="produto.price" min="0" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coluna imagem -->
+    <div class="imagem-section">
+      <div class="section-card">
+        <h3 class="section-titulo">Imagem do Produto</h3>
+
+        <div class="preview-box">
+          <img [src]="imagePreview" alt="Preview" class="preview-img" />
+        </div>
+
+        <div class="campo" style="margin-top: 16px">
+          <label>URL da Imagem</label>
+          <input type="text" placeholder="https://..." [(ngModel)]="produto.imageUrl" />
+          <span class="campo-hint">Cole o link de uma imagem para visualizar o preview</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Mensagens -->
+  @if (erro) {
+  <div class="mensagem erro-msg">
+    <span class="material-icons">error_outline</span>
+    {{ erro }}
+  </div>
+  }
+
+  @if (sucesso) {
+  <div class="mensagem sucesso-msg">
+    <span class="material-icons">check_circle</span>
+    Produto {{ isEdicao ? 'atualizado' : 'cadastrado' }} com sucesso! Redirecionando...
+  </div>
+  }
+
+  <!-- Actions fixas -->
+  <div class="actions-bar">
+    <button class="btn-cancelar" (click)="cancelar()" [disabled]="salvando">
+      Cancelar
+    </button>
+    <button class="btn-salvar" (click)="salvar()" [disabled]="salvando">
+      @if (salvando) {
+      <span class="material-icons spinning">sync</span>
+      Salvando...
+      } @else {
+      <span class="material-icons">save</span>
+      {{ isEdicao ? 'Alterar' : 'Cadastrar' }}
+      }
+    </button>
+  </div>
 
 </div>

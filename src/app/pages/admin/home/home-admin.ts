@@ -12,27 +12,18 @@ import { AuthService } from '../../../core/services/auth';
   styleUrl: './home-admin.css'
 })
 export class HomeAdmin implements OnInit {
-  // Dados
-  dummyProducts: any[] = [];
-  localProducts: any[] = [];
   allProducts: any[] = [];
-  myProducts: any[] = [];
+  localProducts: any[] = [];
   categories: any[] = [];
-
-  // Filtros
   filteredProducts: any[] = [];
   paginatedProducts: any[] = [];
   selectedCategory = '';
   searchQuery = '';
-
-  // Paginação
   currentPage = 1;
-  itemsPerPage = 12;
+  itemsPerPage = 10;
   totalPages = 1;
-
-  // Estado
   carregando = true;
-  abaAtiva: 'todos' | 'meus' = 'todos';
+  menuAberto = false;
 
   constructor(
     private apiService: ApiService,
@@ -48,34 +39,44 @@ export class HomeAdmin implements OnInit {
 
   loadAllProducts(): void {
     this.carregando = true;
-
     this.apiService.getProducts().subscribe({
-      next: (res) => {
-        this.dummyProducts = res.products;
-        this.loadLocalProducts();
-      },
-      error: () => {
-        this.carregando = false;
-        this.cdr.detectChanges();
-      }
-    });
-  }
+      next: (apiProducts) => {
+        this.apiService.getLocalProducts().subscribe({
+          next: (localProducts) => {
+            this.localProducts = localProducts;
 
-  loadLocalProducts(): void {
-    this.apiService.getLocalProducts().subscribe({
-      next: (res) => {
-        this.localProducts = res.map((p: any) => ({ ...p, isLocal: true }));
-        this.myProducts = this.localProducts.filter(
-          p => p.userId === this.getUser()?.id
-        );
-        this.allProducts = [...this.dummyProducts, ...this.localProducts];
-        this.applyFilters();
-        this.carregando = false;
-        this.cdr.detectChanges();
+            // IDs deletados ou editados no JSON Server
+            const deletedIds = localProducts.filter((p: any) => p.deleted).map((p: any) => p.originalId ?? p.id);
+            const editedMap = new Map(localProducts.filter((p: any) => !p.deleted && p.originalId).map((p: any) => [p.originalId, p]));
+
+            // Produtos da API: remove deletados, substitui editados
+            let result = apiProducts.products
+              .filter((p: any) => !deletedIds.includes(p.id))
+              .map((p: any) => {
+                if (editedMap.has(p.id)) {
+                  const edited = editedMap.get(p.id) as any;
+                  return { ...edited, isLocal: true };
+                }
+                return p;
+              });
+
+            // Adiciona produtos novos do JSON Server (sem originalId e sem deleted)
+            const newProducts = localProducts.filter((p: any) => !p.originalId && !p.deleted).map((p: any) => ({ ...p, isLocal: true }));
+
+            this.allProducts = [...result, ...newProducts];
+            this.applyFilters();
+            this.carregando = false;
+            this.cdr.detectChanges();
+          },
+          error: () => {
+            this.allProducts = apiProducts.products;
+            this.applyFilters();
+            this.carregando = false;
+            this.cdr.detectChanges();
+          }
+        });
       },
       error: () => {
-        this.allProducts = [...this.dummyProducts];
-        this.applyFilters();
         this.carregando = false;
         this.cdr.detectChanges();
       }
@@ -91,22 +92,24 @@ export class HomeAdmin implements OnInit {
     });
   }
 
-  mudarAba(aba: 'todos' | 'meus'): void {
-    this.abaAtiva = aba;
-    this.currentPage = 1;
-    this.searchQuery = '';
-    this.selectedCategory = '';
-    this.applyFilters();
-  }
-
   filterByCategory(category: string): void {
     this.currentPage = 1;
-    if (this.selectedCategory === category) {
-      this.selectedCategory = '';
-    } else {
-      this.selectedCategory = category;
-    }
+
+    this.selectedCategory =
+      this.selectedCategory === category ? '' : category;
+
     this.applyFilters();
+
+    this.menuAberto = false;
+    document.body.style.overflow = '';
+
+    this.cdr.detectChanges();
+  }
+
+  closeMenu(): void {
+    this.menuAberto = false;
+    document.body.style.overflow = '';
+    this.cdr.detectChanges();
   }
 
   search(): void {
@@ -115,58 +118,113 @@ export class HomeAdmin implements OnInit {
   }
 
   applyFilters(): void {
-    let source = this.abaAtiva === 'todos' ? this.allProducts : this.myProducts;
+    let result = this.allProducts;
 
     if (this.selectedCategory) {
-      source = source.filter(p => p.category === this.selectedCategory);
+      result = result.filter(p => p.category === this.selectedCategory);
     }
 
     if (this.searchQuery.trim()) {
       const query = this.searchQuery.toLowerCase();
-      source = source.filter(p =>
+      result = result.filter(p =>
         p.title?.toLowerCase().includes(query) ||
         p.description?.toLowerCase().includes(query)
       );
     }
 
-    this.filteredProducts = source;
+    this.filteredProducts = result;
     this.updatePagination();
     this.cdr.detectChanges();
   }
 
   updatePagination(): void {
-    this.totalPages = Math.ceil(this.filteredProducts.length / this.itemsPerPage);
-    if (this.totalPages === 0) this.totalPages = 1;
+    this.totalPages = Math.max(1, Math.ceil(this.filteredProducts.length / this.itemsPerPage));
     const start = (this.currentPage - 1) * this.itemsPerPage;
     this.paginatedProducts = this.filteredProducts.slice(start, start + this.itemsPerPage);
   }
 
   goToPage(page: number): void {
     if (page < 1 || page > this.totalPages) return;
+
     this.currentPage = page;
     this.updatePagination();
     this.cdr.detectChanges();
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 
-  getPages(): number[] {
-    const pages = [];
-    for (let i = 1; i <= this.totalPages; i++) {
+  getPages(): Array<number | string> {
+
+    const pages: (number | string)[] = [];
+
+    if (this.totalPages <= 5) {
+      return Array.from(
+        { length: this.totalPages },
+        (_, i) => i + 1
+      );
+    }
+
+    pages.push(1);
+
+    const start = Math.max(2, this.currentPage - 1);
+    const end = Math.min(
+      this.totalPages - 1,
+      this.currentPage + 1
+    );
+
+    if (start > 2) {
+      pages.push('...');
+    }
+
+    for (let i = start; i <= end; i++) {
       pages.push(i);
     }
+
+    if (end < this.totalPages - 1) {
+      pages.push('...');
+    }
+
+    pages.push(this.totalPages);
+
     return pages;
   }
 
-  editProduct(id: number): void {
-    this.router.navigate(['/admin/add-product', id]);
+  editProduct(produto: any): void {
+    this.router.navigate(['/admin/add-product'], { state: { produto } });
   }
 
-  deleteProduct(id: number): void {
-    if (!confirm('Tem certeza que deseja excluir este produto?')) return;
-    this.apiService.deleteProduct(id).subscribe({
-      next: () => {
-        this.loadLocalProducts();
+  deleteProduct(produto: any): void {
+    if (!confirm(`Excluir "${produto.title}"?`)) return;
+
+    if (produto.isLocal) {
+      // Produto local: marca como deletado no JSON Server
+      const localItem = this.localProducts.find(p => p.originalId === produto.id || p.id === produto.id);
+      if (localItem) {
+        this.apiService.updateProduct(localItem.id, { ...localItem, deleted: true }).subscribe({
+          next: () => this.loadAllProducts()
+        });
       }
-    });
+    } else {
+      // Produto da API: salva no JSON Server com flag deleted
+      this.apiService.addProduct({ originalId: produto.id, deleted: true }).subscribe({
+        next: () => this.loadAllProducts()
+      });
+    }
+  }
+
+  toggleMenu(): void {
+    this.menuAberto = !this.menuAberto;
+
+    if (this.menuAberto) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    this.cdr.detectChanges();
   }
 
   goToAddProduct(): void {
