@@ -635,3 +635,36 @@ input:focus-visible {
   outline: 3px solid #FFD6CE;
   outline-offset: 2px;
 }
+
+.btn-profile {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid #FFD6CE;
+  color: #FFD6CE;
+  padding: 6px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.btn-profile:hover {
+  background: #FFD6CE;
+  color: #1a1a1a;
+}
+
+.profile-text {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* mobile */
+@media (max-width: 600px) {
+  .profile-text {
+    display: none;
+  }
+}

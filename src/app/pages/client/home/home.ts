@@ -224,4 +224,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   getUser(): any {
     return this.authService.getUser();
   }
+
+  goToProfile(): void {
+    this.router.navigate(['/profile']);
+  }
 }
