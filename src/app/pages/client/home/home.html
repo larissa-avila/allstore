@@ -156,7 +156,33 @@
           }
 
         </div>
+        @if (totalPages > 1) {
+        <div class="paginacao">
+          <button class="pag-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
+            <span class="material-icons notranslate">chevron_left</span>
+          </button>
+          @for (page of getPages(); track page) {
 
+          @if (page === '...') {
+
+          <span class="pag-reticencias">
+            ...
+          </span>
+
+          } @else {
+
+          <button class="pag-btn" [class.ativo]="page === currentPage" (click)="goToPage(+page)">
+            {{ page }}
+          </button>
+
+          }
+
+          }
+          <button class="pag-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">
+            <span class="material-icons notranslate">chevron_right</span>
+          </button>
+        </div>
+        }
         }
 
       </div>

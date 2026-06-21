@@ -228,4 +228,5 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   goToProfile(): void {
     this.router.navigate(['/profile']);
   }
+  
 }
