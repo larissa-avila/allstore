@@ -32,6 +32,17 @@ export class ApiService {
         return this.http.get(`${this.dummyUrl}/products/${id}`);
     }
 
+    getMe(): Observable<any> {
+        const token = localStorage.getItem('token');
+
+        return this.http.get(`${this.dummyUrl}/auth/me`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            withCredentials: true
+        });
+    }
+
     // JSON Server - Produtos do Admin
     getLocalProducts(): Observable<any> {
         return this.http.get(`${this.localUrl}/products`);
@@ -46,8 +57,8 @@ export class ApiService {
     }
 
     // JSON Server - Carrinho
-    getCart(): Observable<any> {
-        return this.http.get(`${this.localUrl}/cart`);
+    getCart(userId: number): Observable<any> {
+        return this.http.get(`${this.localUrl}/cart?userId=${userId}`);
     }
 
     addToCart(item: any): Observable<any> {
@@ -71,10 +82,16 @@ export class ApiService {
     }
 
     addOrUpdateCart(productId: number, item: any, quantityToAdd: number = 1): Observable<any> {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
         return new Observable(observer => {
-            this.getCart().subscribe({
+            this.getCart(user.id).subscribe({
                 next: (cartItems: any[]) => {
-                    const existing = cartItems.find((c: any) => c.productId === productId);
+
+                    const existing = cartItems.find(
+                        (c: any) =>
+                            c.productId === productId &&
+                            c.userId === user.id
+                    );
 
                     if (existing) {
                         this.updateCartItem(existing.id, {
@@ -86,7 +103,11 @@ export class ApiService {
                             complete: () => observer.complete()
                         });
                     } else {
-                        this.addToCart({ ...item, quantity: quantityToAdd }).subscribe({
+                        this.addToCart({
+                            ...item,
+                            quantity: quantityToAdd,
+                            userId: user.id
+                        }).subscribe({
                             next: (res) => observer.next(res),
                             error: (err) => observer.error(err),
                             complete: () => observer.complete()

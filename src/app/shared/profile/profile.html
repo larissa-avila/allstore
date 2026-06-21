@@ -1,0 +1,75 @@
+<div class="pagina">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <button class="btn-voltar" (click)="voltar()" aria-label="Voltar">
+        <span class="material-icons notranslate">arrow_back</span>
+      </button>
+      <h1 class="logo">Perfil</h1>
+    </div>
+  </header>
+
+  @if (carregando) {
+    <div class="loading" role="status" aria-live="polite">
+      <div class="spinner"></div>
+      <p>Carregando dados...</p>
+    </div>
+  } @else if (!user) {
+    <div class="vazio" role="alert">
+      <span class="material-icons notranslate">error_outline</span>
+      <p>Não foi possível carregar o perfil.</p>
+    </div>
+  } @else {
+
+    <main class="conteudo">
+
+      <section class="card-perfil" aria-label="Dados do usuário">
+
+        <div class="avatar-section">
+          <img [src]="user.image" alt="Foto de perfil de {{ user.firstName }}" />
+          <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+          <span class="username">@{{ user.username }}</span>
+        </div>
+
+        <div class="info-grid">
+
+          <div class="info-item">
+            <label>Nome completo</label>
+            <p>{{ user.firstName }} {{ user.lastName }}</p>
+          </div>
+
+          <div class="info-item">
+            <label>Email</label>
+            <p>{{ user.email }}</p>
+          </div>
+
+          <div class="info-item">
+            <label>Telefone</label>
+            <p>{{ user.phone || 'Não informado' }}</p>
+          </div>
+
+          <div class="info-item">
+            <label>Idade</label>
+            <p>{{ user.age }}</p>
+          </div>
+
+          <div class="info-item">
+            <label>Gênero</label>
+            <p>{{ user.gender }}</p>
+          </div>
+
+          <div class="info-item">
+            <label>Empresa</label>
+            <p>{{ user.company?.name || 'Não informado' }}</p>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  }
+
+</div>

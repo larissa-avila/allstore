@@ -12,3 +12,10 @@ html, body {
 .notranslate {
   translate: no;
 }
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid #f0a090;
+  outline-offset: 3px;
+  border-radius: 8px;
+}

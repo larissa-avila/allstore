@@ -553,3 +553,37 @@
   text-align: center;
   color: #bbb;
 }
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+.dropdown-selected:focus-visible {
+  outline: 3px solid #f0a090;
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* dropdown foco melhor */
+.dropdown-item:focus-visible {
+  outline: 3px solid #f0a090;
+  background: #fff5f3;
+}
+
+/* botão salvar destaque teclado */
+.btn-salvar:focus-visible {
+  outline: 3px solid #f0a090;
+  outline-offset: 3px;
+}
+
+/* breadcrumb acessível */
+.breadcrumb-link {
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.breadcrumb-link:focus-visible {
+  outline: 3px solid #f0a090;
+  border-radius: 6px;
+}

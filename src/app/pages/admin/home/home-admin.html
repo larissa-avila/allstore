@@ -2,19 +2,36 @@
 
   <!-- Header -->
   <header class="header">
+
+    <!-- LADO ESQUERDO -->
     <div class="header-left">
-      <button class="menu-toggle" (click)="toggleMenu()">
+      <button class="menu-toggle" (click)="toggleMenu()" aria-label="Abrir menu de categorias">
+
         <span class="material-icons notranslate">menu</span>
       </button>
+
       <h1 class="logo">All Store</h1>
+
       <span class="badge-admin">Admin</span>
     </div>
+
+    <!-- LADO DIREITO -->
     <div class="header-right">
-      <span class="usuario">
-        <span class="material-icons notranslate" style="font-size:18px;vertical-align:middle">person</span>
-        {{ getUser()?.firstName }}
-      </span>
-      <button class="btn-logout" (click)="logout()">Sair</button>
+
+      <!-- BOTÃO PERFIL -->
+      <button class="usuario-btn" (click)="goToProfile()" aria-label="Abrir perfil do usuário">
+        <span class="material-icons notranslate">
+          account_circle
+        </span>
+        <span class="usuario-nome">
+          {{ getUser()?.firstName }}
+        </span>
+      </button>
+
+      <!-- LOGOUT -->
+      <button class="btn-logout" (click)="logout()" aria-label="Sair do sistema">
+        Sair
+      </button>
     </div>
   </header>
 
@@ -29,7 +46,9 @@
     <!-- Sidebar -->
     <aside class="sidebar" [class.aberto]="menuAberto">
       <div class="sidebar-header">
-        <span class="categorias-titulo">Categorias</span>
+        <h2 class="categorias-titulo">
+          Categorias
+        </h2>
         <button class="sidebar-close" (click)="closeMenu()">
           <span class="material-icons notranslate">close</span>
         </button>
@@ -53,22 +72,22 @@
       <div class="topo-principal">
         <div class="busca-container">
           <span class="material-icons notranslate busca-icone">search</span>
-          <input type="text" class="busca-input" placeholder="Buscar produto..." [(ngModel)]="searchQuery"
-            (ngModelChange)="search()" />
+          <input id="buscaProduto" name="buscaProduto" type="text" class="busca-input" placeholder="Buscar produto..."
+            aria-label="Buscar produto" [(ngModel)]="searchQuery" (ngModelChange)="search()" />
           @if (searchQuery) {
           <button class="busca-clear" (click)="searchQuery = ''; search()">
             <span class="material-icons notranslate">close</span>
           </button>
           }
         </div>
-        <button class="btn-adicionar" (click)="goToAddProduct()">
+        <button class="btn-adicionar" (click)="goToAddProduct()" aria-label="Adicionar novo produto">
           <span class="material-icons notranslate">add</span>
           <span class="btn-texto">Novo Produto</span>
         </button>
       </div>
 
       @if (!carregando) {
-      <div class="resultado-info">{{ filteredProducts.length }} produtos encontrados</div>
+      <div class="resultado-info" aria-live="polite">{{ filteredProducts.length }} produtos encontrados</div>
       }
 
       <!-- Grid -->
@@ -90,7 +109,7 @@
           <span class="badge-local">Editado</span>
           }
           <div class="produto-img-container">
-            <img [src]="produto.thumbnail" [alt]="produto.title" class="produto-img" />
+            <img [src]="produto.thumbnail" [alt]="'Foto do produto ' + produto.title" class="produto-img" />
             <div class="produto-overlay">
               <span class="produto-categoria">{{ produto.category }}</span>
             </div>
@@ -107,11 +126,13 @@
               }
             </div>
             <div class="acoes">
-              <button class="btn-editar" (click)="editProduct(produto)">
+              <button class="btn-editar" (click)="editProduct(produto)"
+                [attr.aria-label]="'Editar produto ' + produto.title">
                 <span class="material-icons notranslate">edit</span>
                 Editar
               </button>
-              <button class="btn-deletar" (click)="deleteProduct(produto)">
+              <button class="btn-deletar" (click)="deleteProduct(produto)"
+                [attr.aria-label]="'Excluir produto ' + produto.title">
                 <span class="material-icons notranslate">delete</span>
                 Excluir
               </button>

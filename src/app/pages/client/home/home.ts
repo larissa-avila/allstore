@@ -104,7 +104,9 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   }
 
   loadCartCount(): void {
-    this.apiService.getCart().subscribe({
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    this.apiService.getCart(user.id).subscribe({
       next: (res) => {
         this.cartCount = res.length;
         this.cdr.detectChanges();

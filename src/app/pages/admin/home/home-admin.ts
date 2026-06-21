@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -245,5 +245,16 @@ export class HomeAdmin implements OnInit {
 
   getUser(): any {
     return this.authService.getUser();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.menuAberto) {
+      this.closeMenu();
+    }
+  }
+
+  goToProfile(): void {
+    this.router.navigate(['/profile']);
   }
 }

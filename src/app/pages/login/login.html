@@ -4,26 +4,49 @@
         <span class="logo-sub">sua loja favorita</span>
     </div>
 
-    <div class="card">
+    <form class="card" (ngSubmit)="entrar()">
         <h2 class="titulo">Entrar</h2>
+
         <div class="divider"></div>
 
         <div class="campo">
             <label for="username">Usuário</label>
-            <input id="username" type="text" placeholder="Digite seu usuário" [(ngModel)]="username" />
+            <input
+                id="username"
+                name="username"
+                type="text"
+                autocomplete="username"
+                placeholder="Digite seu usuário"
+                [(ngModel)]="username"
+                required />
         </div>
 
         <div class="campo">
             <label for="password">Senha</label>
-            <input id="password" type="password" placeholder="Digite sua senha" [(ngModel)]="password" />
+            <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Digite sua senha"
+                [(ngModel)]="password"
+                required />
         </div>
 
         @if (erro) {
-        <p class="erro">{{ erro }}</p>
+            <p class="erro" role="alert">
+                {{ erro }}
+            </p>
         }
 
-        <button class="btn-entrar" (click)="entrar()" [disabled]="carregando">
+        <button
+            type="submit"
+            class="btn-entrar"
+            [disabled]="carregando"
+            aria-label="Entrar no sistema">
+
             {{ carregando ? 'Entrando...' : 'Entrar' }}
+
         </button>
-    </div>
+    </form>
 </div>

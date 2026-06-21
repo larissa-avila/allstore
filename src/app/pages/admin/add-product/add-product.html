@@ -1,138 +1,231 @@
-<div class="pagina" (click)="dropdownAberto = false">
+<header class="header">
+  <div class="header-left">
+    <button
+      class="btn-voltar"
+      type="button"
+      (click)="cancelar()"
+      aria-label="Voltar para produtos"
+    >
+      <span class="material-icons notranslate">arrow_back</span>
+    </button>
 
-  <!-- Header -->
-  <header class="header">
-    <div class="header-left">
-      <button class="btn-voltar" (click)="cancelar()">
-        <span class="material-icons notranslate">arrow_back</span>
-      </button>
-      <h1 class="logo">All Store</h1>
-    </div>
-    <div class="header-right">
-      <span class="badge-admin">Admin</span>
-    </div>
-  </header>
-
-  <!-- Breadcrumb -->
-  <div class="breadcrumb">
-    <span (click)="cancelar()" class="breadcrumb-link">Produtos</span>
-    <span class="material-icons notranslate" style="font-size:16px;color:#bbb">chevron_right</span>
-    <span>{{ isEdicao ? 'Editar Produto' : 'Novo Produto' }}</span>
+    <h1 class="logo">All Store</h1>
   </div>
 
-  <!-- Conteúdo -->
-  <div class="conteudo">
+  <div class="header-right">
+    <span class="badge-admin" aria-label="Área administrativa">Admin</span>
+  </div>
+</header>
 
-    <!-- Coluna form -->
-    <div class="form-section">
-      <div class="section-card">
-        <h3 class="section-titulo">Informações Básicas</h3>
+<!-- Breadcrumb -->
+<nav class="breadcrumb" aria-label="Navegação">
+  <button type="button" class="breadcrumb-link" (click)="cancelar()">
+    Produtos
+  </button>
 
-        <div class="campo">
-          <label>Nome do Produto <span class="obrigatorio">*</span></label>
-          <input type="text" placeholder="Ex: Tênis Casual Branco" [(ngModel)]="produto.title" />
+  <span class="material-icons notranslate" aria-hidden="true">chevron_right</span>
+
+  <span aria-current="page">
+    {{ isEdicao ? 'Editar Produto' : 'Novo Produto' }}
+  </span>
+</nav>
+
+<!-- FORM -->
+<div class="conteudo">
+
+  <div class="form-section">
+
+    <!-- Nome -->
+    <div class="campo">
+      <label for="titulo">
+        Nome do Produto <span class="obrigatorio">*</span>
+      </label>
+
+      <input
+        id="titulo"
+        type="text"
+        [(ngModel)]="produto.title"
+        placeholder="Ex: Tênis Casual Branco"
+        aria-required="true"
+      />
+    </div>
+
+    <!-- CATEGORIA -->
+    <div class="campo">
+      <label>Categoria <span class="obrigatorio">*</span></label>
+
+      <div
+        class="dropdown-container"
+        [class.aberto]="dropdownAberto"
+        role="combobox"
+        aria-expanded="{{ dropdownAberto }}"
+        aria-controls="lista-categorias"
+        aria-label="Selecionar categoria"
+      >
+
+        <div
+          class="dropdown-selected"
+          tabindex="0"
+          (click)="toggleDropdown(); $event.stopPropagation()"
+          (keydown.enter)="toggleDropdown()"
+          (keydown.space)="toggleDropdown()"
+        >
+          <span [class.placeholder]="!produto.category">
+            {{ getCategoryName() || 'Selecione uma categoria' }}
+          </span>
+
+          <span class="material-icons notranslate dropdown-arrow">
+            expand_more
+          </span>
         </div>
 
-        <div class="campo">
-          <label>Categoria <span class="obrigatorio">*</span></label>
-          <div class="dropdown-container" [class.aberto]="dropdownAberto"
-            (click)="toggleDropdown(); $event.stopPropagation()">
-            <div class="dropdown-selected">
-              <span [class.placeholder]="!produto.category">
-                {{ getCategoryName() || 'Selecione uma categoria' }}
-              </span>
-              <span class="material-icons notranslate dropdown-arrow" [class.aberto]="dropdownAberto">expand_more</span>
-            </div>
+        @if (dropdownAberto) {
+        <div class="dropdown-panel" (click)="$event.stopPropagation()">
 
-            @if (dropdownAberto) {
-            <div class="dropdown-panel" (click)="$event.stopPropagation()">
-              <div class="dropdown-busca">
-                <span class="material-icons notranslate">search</span>
-                <input type="text" placeholder="Buscar categoria..." [(ngModel)]="categoriaSearch"
-                  (ngModelChange)="filterCategories()" />
+          <div class="dropdown-busca">
+            <span class="material-icons notranslate" aria-hidden="true">
+              search
+            </span>
+
+            <input
+              type="text"
+              placeholder="Buscar categoria..."
+              [(ngModel)]="categoriaSearch"
+              (ngModelChange)="filterCategories()"
+              aria-label="Buscar categoria"
+            />
+          </div>
+
+          <div class="dropdown-lista" id="lista-categorias">
+            @for (cat of categoriasFiltradas; track cat.slug) {
+              <div
+                class="dropdown-item"
+                tabindex="0"
+                (click)="selectCategory(cat.slug)"
+                (keydown.enter)="selectCategory(cat.slug)"
+              >
+                {{ cat.name }}
               </div>
-              <div class="dropdown-lista">
-                @for (cat of categoriasFiltradas; track cat.slug) {
-                <div class="dropdown-item" [class.selecionado]="produto.category === cat.slug"
-                  (click)="selectCategory(cat.slug)">
-                  {{ cat.name }}
-                </div>
-                }
-                @if (categoriasFiltradas.length === 0) {
-                <div class="dropdown-vazio">Nenhuma categoria encontrada</div>
-                }
+            }
+
+            @if (categoriasFiltradas.length === 0) {
+              <div class="dropdown-vazio">
+                Nenhuma categoria encontrada
               </div>
-            </div>
             }
           </div>
-        </div>
 
-        <div class="campo">
-          <label>Descrição</label>
-          <textarea placeholder="Descreva o produto..." [(ngModel)]="produto.description" rows="4"></textarea>
         </div>
-      </div>
-
-      <div class="section-card">
-        <h3 class="section-titulo">Preço</h3>
-        <div class="campo">
-          <label>Valor (R$) <span class="obrigatorio">*</span></label>
-          <div class="input-prefix">
-            <span class="prefix">R$</span>
-            <input type="number" placeholder="0,00" [(ngModel)]="produto.price" min="0" />
-          </div>
-        </div>
+        }
       </div>
     </div>
 
-    <!-- Coluna imagem -->
-    <div class="imagem-section">
-      <div class="section-card">
-        <h3 class="section-titulo">Imagem do Produto</h3>
+    <!-- DESCRIÇÃO -->
+    <div class="campo">
+      <label for="descricao">Descrição</label>
 
-        <div class="preview-box">
-          <img [src]="imagePreview" alt="Preview" class="preview-img" />
-        </div>
+      <textarea
+        id="descricao"
+        [(ngModel)]="produto.description"
+        rows="4"
+        placeholder="Descreva o produto..."
+      ></textarea>
+    </div>
 
-        <div class="campo" style="margin-top: 16px">
-          <label>URL da Imagem</label>
-          <input type="text" placeholder="https://..." [(ngModel)]="produto.imageUrl" />
-          <span class="campo-hint">Cole o link de uma imagem para visualizar o preview</span>
-        </div>
+    <!-- PREÇO -->
+    <div class="campo">
+      <label for="preco">
+        Valor (R$) <span class="obrigatorio">*</span>
+      </label>
+
+      <div class="input-prefix">
+        <span class="prefix" aria-hidden="true">R$</span>
+
+        <input
+          id="preco"
+          type="number"
+          [(ngModel)]="produto.price"
+          min="0"
+          aria-required="true"
+        />
       </div>
     </div>
 
   </div>
 
-  <!-- Mensagens -->
-  @if (erro) {
-  <div class="mensagem erro-msg">
-    <span class="material-icons notranslate">error_outline</span>
+  <!-- IMAGEM -->
+  <div class="imagem-section">
+    <div class="section-card">
+
+      <h3 class="section-titulo">Imagem do Produto</h3>
+
+      <div class="preview-box">
+        <img
+          [src]="imagePreview"
+          alt="Pré-visualização do produto"
+          class="preview-img"
+        />
+      </div>
+
+      <div class="campo">
+        <label for="img">URL da Imagem</label>
+
+        <input
+          id="img"
+          type="text"
+          [(ngModel)]="produto.imageUrl"
+          placeholder="https://..."
+        />
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ERRO / SUCESSO -->
+@if (erro) {
+  <div class="mensagem erro-msg" role="alert">
+    <span class="material-icons notranslate" aria-hidden="true">
+      error_outline
+    </span>
     {{ erro }}
   </div>
-  }
+}
 
-  @if (sucesso) {
-  <div class="mensagem sucesso-msg">
-    <span class="material-icons notranslate">check_circle</span>
-    Produto {{ isEdicao ? 'atualizado' : 'cadastrado' }} com sucesso! Redirecionando...
+@if (sucesso) {
+  <div class="mensagem sucesso-msg" role="status">
+    <span class="material-icons notranslate" aria-hidden="true">
+      check_circle
+    </span>
+    Produto salvo com sucesso
   </div>
-  }
+}
 
-  <!-- Actions fixas -->
-  <div class="actions-bar">
-    <button class="btn-cancelar" (click)="cancelar()" [disabled]="salvando">
-      Cancelar
-    </button>
-    <button class="btn-salvar" (click)="salvar()" [disabled]="salvando">
-      @if (salvando) {
+<!-- ACTIONS -->
+<div class="actions-bar">
+
+  <button
+    class="btn-cancelar"
+    type="button"
+    (click)="cancelar()"
+  >
+    Cancelar
+  </button>
+
+  <button
+    class="btn-salvar"
+    type="button"
+    (click)="salvar()"
+    [disabled]="salvando"
+  >
+    @if (salvando) {
       <span class="material-icons notranslate spinning">sync</span>
       Salvando...
-      } @else {
+    } @else {
       <span class="material-icons notranslate">save</span>
       {{ isEdicao ? 'Alterar' : 'Cadastrar' }}
-      }
-    </button>
-  </div>
+    }
+  </button>
 
 </div>

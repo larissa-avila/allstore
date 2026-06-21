@@ -1,138 +1,191 @@
 <div class="pagina">
 
-  <!-- Header -->
   <header class="header">
     <div class="header-left">
-      <button class="btn-voltar" (click)="voltar()">
+
+      <button class="btn-voltar" (click)="voltar()" aria-label="Voltar para lista de produtos">
         <span class="material-icons notranslate">arrow_back</span>
       </button>
+
       <h1 class="logo">All Store</h1>
     </div>
+
     <div class="header-right">
-      <button class="btn-cart" (click)="goToCart()">
+
+      <button class="btn-cart" (click)="goToCart()" aria-label="Ir para carrinho">
         <span class="material-icons notranslate">shopping_cart</span>
+
         @if (cartCount > 0) {
-          <span class="cart-badge">{{ cartCount }}</span>
+        <span class="cart-badge" aria-label="Itens no carrinho">
+          {{ cartCount }}
+        </span>
         }
       </button>
+
     </div>
   </header>
 
   @if (carregando) {
-    <div class="loading">
-      <div class="spinner"></div>
-      <p>Carregando produto...</p>
-    </div>
+
+  <div class="loading" role="status" aria-live="polite">
+    <div class="spinner"></div>
+    <p>Carregando produto...</p>
+  </div>
+
   } @else if (!produto) {
-    <div class="vazio">
-      <span class="material-icons notranslate" style="font-size:48px;color:#ddd">error_outline</span>
-      <p>Produto não encontrado.</p>
-    </div>
+
+  <div class="vazio" role="alert">
+    <span class="material-icons notranslate">error_outline</span>
+    <p>Produto não encontrado.</p>
+  </div>
+
   } @else {
 
-    <!-- Breadcrumb -->
-    <div class="breadcrumb">
-      <span class="breadcrumb-link" (click)="voltar()">Produtos</span>
-      <span class="material-icons notranslate" style="font-size:16px;color:#bbb">chevron_right</span>
-      <span>{{ produto.title }}</span>
-    </div>
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Navegação estrutural">
 
-    <div class="conteudo">
+    <button class="breadcrumb-link" (click)="voltar()">
+      Produtos
+    </button>
 
-      <!-- Galeria -->
-      <div class="galeria-section">
-        <div class="imagem-principal">
-          <img [src]="imagemAtiva" [alt]="produto.title" />
-        </div>
-        @if (produto.images?.length > 1) {
-          <div class="thumbnails">
-            @for (img of produto.images; track img) {
-              <div
-                class="thumbnail"
-                [class.ativo]="img === imagemAtiva"
-                (click)="selecionarImagem(img)"
-              >
-                <img [src]="img" [alt]="produto.title" />
-              </div>
-            }
-          </div>
+    <span class="material-icons notranslate">chevron_right</span>
+
+    <span aria-current="page">{{ produto.title }}</span>
+
+  </nav>
+
+  <main class="conteudo">
+
+    <!-- GALERIA -->
+    <section class="galeria-section">
+
+      <div class="imagem-principal">
+        <img [src]="imagemAtiva" [alt]="'Imagem do produto ' + produto.title" />
+      </div>
+
+      @if (produto.images?.length > 1) {
+      <div class="thumbnails">
+
+        @for (img of produto.images; track img) {
+
+        <button type="button" class="thumbnail" [class.ativo]="img === imagemAtiva" (click)="selecionarImagem(img)"
+          [attr.aria-label]="'Ver imagem do produto ' + produto.title">
+          <img [src]="img" [alt]="'Miniatura do produto ' + produto.title" />
+        </button>
+
+        }
+
+      </div>
+      }
+
+    </section>
+
+    <!-- INFO -->
+    <section class="info-section">
+
+      <span class="produto-categoria-tag">
+        {{ produto.category }}
+      </span>
+
+      <h1 class="produto-titulo">
+        {{ produto.title }}
+      </h1>
+
+      <div class="produto-rating-row">
+
+        <span class="material-icons notranslate">star</span>
+
+        <span class="rating-valor">{{ produto.rating }}</span>
+
+        <span class="rating-divisor">•</span>
+
+        <span class="estoque" [class.baixo]="produto.stock < 10">
+          {{ produto.stock > 0
+          ? produto.stock + ' em estoque'
+          : 'Fora de estoque' }}
+        </span>
+
+      </div>
+
+      <div class="preco-row">
+        <span class="produto-preco">
+          R$ {{ produto.price }}
+        </span>
+
+        @if (produto.discountPercentage) {
+        <span class="desconto-badge">
+          -{{ produto.discountPercentage }}%
+        </span>
         }
       </div>
 
-      <!-- Informações -->
-      <div class="info-section">
-        <span class="produto-categoria-tag">{{ produto.category }}</span>
-        <h1 class="produto-titulo">{{ produto.title }}</h1>
+      <p class="produto-descricao">
+        {{ produto.description }}
+      </p>
 
-        <div class="produto-rating-row">
-          <span class="material-icons notranslate" style="color:#f0a090;font-size:1.1rem">star</span>
-          <span class="rating-valor">{{ produto.rating }}</span>
-          <span class="rating-divisor">•</span>
-          <span class="estoque" [class.baixo]="produto.stock < 10">
-            {{ produto.stock > 0 ? produto.stock + ' em estoque' : 'Fora de estoque' }}
-          </span>
+      <div class="info-extra">
+
+        <div class="info-item">
+          <span class="material-icons notranslate">local_shipping</span>
+          <span>{{ produto.shippingInformation || 'Entrega em 3-5 dias úteis' }}</span>
         </div>
 
-        <div class="preco-row">
-          <span class="produto-preco">R$ {{ produto.price }}</span>
-          @if (produto.discountPercentage) {
-            <span class="desconto-badge">-{{ produto.discountPercentage }}%</span>
-          }
-        </div>
-
-        <p class="produto-descricao">{{ produto.description }}</p>
-
-        <div class="info-extra">
-          <div class="info-item">
-            <span class="material-icons notranslate">local_shipping</span>
-            <span>{{ produto.shippingInformation || 'Entrega em 3-5 dias úteis' }}</span>
-          </div>
-          <div class="info-item">
-            <span class="material-icons notranslate">verified</span>
-            <span>{{ produto.warrantyInformation || 'Garantia de 30 dias' }}</span>
-          </div>
-        </div>
-
-        <!-- Quantidade -->
-        <div class="quantidade-section">
-          <label>Quantidade</label>
-          <div class="quantidade-seletor">
-            <button class="qtd-btn" (click)="diminuirQuantidade()" [disabled]="quantidade <= 1">
-              <span class="material-icons notranslate">remove</span>
-            </button>
-            <span class="qtd-valor">{{ quantidade }}</span>
-            <button class="qtd-btn" (click)="aumentarQuantidade()">
-              <span class="material-icons notranslate">add</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Ações -->
-        <div class="acoes-compra">
-          <button class="btn-carrinho-detail" (click)="adicionarAoCarrinho()" [disabled]="adicionando">
-            @if (adicionando) {
-              <span class="material-icons notranslate spinning">sync</span>
-              Adicionando...
-            } @else {
-              <span class="material-icons notranslate">add_shopping_cart</span>
-              Adicionar ao Carrinho
-            }
-          </button>
-          <button class="btn-comprar" (click)="comprarAgora()">
-            <span class="material-icons notranslate">bolt</span>
-            Comprar Agora
-          </button>
+        <div class="info-item">
+          <span class="material-icons notranslate">verified</span>
+          <span>{{ produto.warrantyInformation || 'Garantia de 30 dias' }}</span>
         </div>
 
       </div>
 
-    </div>
-  }
+      <!-- QUANTIDADE -->
+      <section class="quantidade-section">
 
-  <!-- Footer -->
-  <footer class="footer">
-    <span class="footer-logo">AllStore</span>
-    <span class="footer-copy">© 2026 All rights reserved</span>
-  </footer>
+        <label for="qtd">Quantidade</label>
+
+        <div class="quantidade-seletor" id="qtd">
+
+          <button class="qtd-btn" (click)="diminuirQuantidade()" [disabled]="quantidade <= 1"
+            aria-label="Diminuir quantidade">
+            <span class="material-icons notranslate">remove</span>
+          </button>
+
+          <span class="qtd-valor" aria-live="polite">
+            {{ quantidade }}
+          </span>
+
+          <button class="qtd-btn" (click)="aumentarQuantidade()" aria-label="Aumentar quantidade">
+            <span class="material-icons notranslate">add</span>
+          </button>
+
+        </div>
+
+      </section>
+
+      <!-- AÇÕES -->
+      <section class="acoes-compra">
+
+        <button class="btn-carrinho-detail" (click)="adicionarAoCarrinho()" [disabled]="adicionando"
+          aria-label="Adicionar produto ao carrinho">
+          @if (adicionando) {
+          <span class="material-icons notranslate spinning">sync</span>
+          Adicionando...
+          } @else {
+          <span class="material-icons notranslate">add_shopping_cart</span>
+          Adicionar ao Carrinho
+          }
+        </button>
+
+        <button class="btn-comprar" (click)="comprarAgora()" aria-label="Comprar agora">
+          <span class="material-icons notranslate">bolt</span>
+          Comprar Agora
+        </button>
+
+      </section>
+
+    </section>
+
+  </main>
+
+  }
 
 </div>

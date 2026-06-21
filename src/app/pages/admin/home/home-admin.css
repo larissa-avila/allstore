@@ -129,7 +129,7 @@
   font-size: 0.75rem;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #999;
+  color: #555;
   font-weight: 600;
 }
 
@@ -202,7 +202,7 @@
 }
 
 .dashboard-card p {
-  color: #999;
+  color: #555;
   font-size: 0.85rem;
 }
 
@@ -285,7 +285,7 @@
 
 .resultado-info {
   font-size: 0.85rem;
-  color: #999;
+  color: #555;
 }
 
 /* Grid */
@@ -452,7 +452,7 @@
   justify-content: center;
   padding: 60px;
   gap: 16px;
-  color: #999;
+  color: #555;
 }
 
 .spinner {
@@ -477,7 +477,7 @@
   justify-content: center;
   padding: 60px;
   gap: 16px;
-  color: #999;
+  color: #555;
 }
 
 /* Paginação */
@@ -506,7 +506,7 @@
   display: flex;
   align-items: center;
   padding: 0 8px;
-  color: #999;
+  color: #555;
   font-weight: 700;
 }
 
@@ -720,4 +720,43 @@
   .logo {
     font-size: 1.2rem;
   }
+}
+
+button:focus-visible,
+input:focus-visible,
+.categoria-btn:focus-visible,
+.pag-btn:focus-visible {
+  outline: 3px solid #1a1a1a;
+  outline-offset: 2px;
+}
+
+.btn-logout:focus-visible {
+  outline: 3px solid #FFD6CE;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(255, 214, 206, 0.35);
+  border-radius: 8px;
+}
+
+.usuario-btn {
+  background: transparent;
+  border: 1px solid #FFD6CE;
+  color: #FFD6CE;
+  border-radius: 10px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.usuario-btn:hover {
+  background: #FFD6CE;
+  color: #1a1a1a;
+}
+
+.usuario-nome {
+  font-size: 0.85rem;
+  font-weight: 600;
 }

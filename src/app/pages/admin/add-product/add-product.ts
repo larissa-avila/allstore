@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -176,4 +176,14 @@ export class AddProduct implements OnInit {
     const cat = this.categories.find((c: any) => c.slug === this.produto.category);
     return cat ? cat.name : '';
   }
+
+  @HostListener('document:keydown.escape')
+  onEscPress(): void {
+    if (this.dropdownAberto) {
+      this.dropdownAberto = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+
 }

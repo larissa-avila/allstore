@@ -31,28 +31,13 @@
   ],
   "cart": [
     {
-      "productId": 3,
-      "title": "Powder Canister",
-      "price": 14.99,
-      "thumbnail": "https://cdn.dummyjson.com/product-images/beauty/powder-canister/thumbnail.webp",
-      "quantity": 1,
-      "id": "TWp2DqpgXgk"
-    },
-    {
-      "productId": 4,
-      "title": "Red Lipstick",
-      "price": 12.99,
-      "thumbnail": "https://cdn.dummyjson.com/product-images/beauty/red-lipstick/thumbnail.webp",
-      "quantity": 1,
-      "id": "sVxDIIikSSo"
-    },
-    {
       "productId": 1,
       "title": "Essence Mascara Lash Princess",
       "price": 9.99,
       "thumbnail": "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/thumbnail.webp",
-      "quantity": 2,
-      "id": "OU-tVJOAZJw"
+      "quantity": 1,
+      "userId": 16,
+      "id": "bQtDlSLORPM"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

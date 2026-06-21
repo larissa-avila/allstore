@@ -475,3 +475,21 @@
     font-size: 1.2rem;
   }
 }
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid #f0a090;
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* melhora contraste do foco no checkbox custom */
+.checkbox-container input:focus-visible + .checkbox-custom {
+  outline: 3px solid #f0a090;
+  outline-offset: 2px;
+}
+
+/* melhora hover + foco no item card */
+.item-card:focus-within {
+  outline: 2px solid #f0a090;
+}

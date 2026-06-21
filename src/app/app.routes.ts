@@ -5,6 +5,7 @@ import { AddProduct } from './pages/admin/add-product/add-product';
 import { Home } from './pages/client/home/home';
 import { ProductDetail } from './pages/client/product-detail/product-detail';
 import { Cart } from './pages/client/cart/cart';
+import { Profile } from './shared/profile/profile';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -14,4 +15,5 @@ export const routes: Routes = [
   { path: 'home', component: Home },
   { path: 'product/:id', component: ProductDetail },
   { path: 'cart', component: Cart },
+  { path: 'profile', component: Profile },
 ];

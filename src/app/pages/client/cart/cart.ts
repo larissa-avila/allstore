@@ -31,13 +31,22 @@ export class Cart implements OnInit {
 
   loadCart(): void {
     this.carregando = true;
-    this.apiService.getCart().subscribe({
+
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    this.apiService.getCart(user.id).subscribe({
       next: (res) => {
-        this.itens = res.map((item: any) => ({ ...item, selecionado: true }));
+        this.itens = res.map((item: any) => ({
+          ...item,
+          selecionado: true
+        }));
+
         this.carregando = false;
         this.cdr.detectChanges();
       },
-      error: () => {
+      error: (err) => {
+        console.error(err);
+
         this.carregando = false;
         this.cdr.detectChanges();
       }
