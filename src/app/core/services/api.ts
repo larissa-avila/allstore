@@ -9,7 +9,8 @@ import { environment } from '../../environments/environment';
 export class ApiService {
     private dummyUrl = 'https://dummyjson.com';
 
-    private localUrl = environment.apiUrl;
+    private localUrl = 'https://allstore-api.onrender.com';
+    // private localUrl = 'http://localhost:3000';
 
     constructor(private http: HttpClient) { }
 
