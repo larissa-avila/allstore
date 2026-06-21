@@ -1,0 +1,137 @@
+<div class="pagina">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <button class="btn-voltar" (click)="voltar()">
+        <span class="material-icons notranslate">arrow_back</span>
+      </button>
+      <h1 class="logo">All Store</h1>
+    </div>
+    <div class="header-right">
+      <button class="btn-logout" (click)="logout()">Sair</button>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <span class="breadcrumb-link" (click)="voltar()">Produtos</span>
+    <span class="material-icons notranslate" style="font-size:16px;color:#bbb">chevron_right</span>
+    <span>Carrinho</span>
+  </div>
+
+  @if (carregando) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Carregando carrinho...</p>
+    </div>
+  } @else if (itens.length === 0) {
+    <div class="vazio">
+      <span class="material-icons notranslate" style="font-size:64px;color:#ddd">shopping_cart</span>
+      <p>Seu carrinho está vazio.</p>
+      <button class="btn-continuar" (click)="voltar()">Continuar Comprando</button>
+    </div>
+  } @else {
+
+    <div class="conteudo">
+
+      <!-- Lista de itens -->
+      <div class="lista-section">
+
+        <div class="selecionar-todos">
+          <label class="checkbox-container">
+            <input type="checkbox" [checked]="todosSelecionados" (change)="toggleSelecionarTodos()" />
+            <span class="checkbox-custom"></span>
+            Selecionar todos
+          </label>
+          <span class="contador-itens">{{ itens.length }} {{ itens.length === 1 ? 'item' : 'itens' }}</span>
+        </div>
+
+        @for (item of itens; track item.id) {
+          <div class="item-card" [class.deselecionado]="!item.selecionado">
+            <label class="checkbox-container">
+              <input type="checkbox" [checked]="item.selecionado" (change)="toggleSelecao(item)" />
+              <span class="checkbox-custom"></span>
+            </label>
+
+            <img [src]="item.thumbnail" [alt]="item.title" class="item-img" />
+
+            <div class="item-info">
+              <p class="item-nome">{{ item.title }}</p>
+              <p class="item-preco-unit">R$ {{ item.price }} / un</p>
+            </div>
+
+            <div class="item-qtd">
+              <button class="qtd-btn" (click)="diminuirQuantidade(item)" [disabled]="item.quantity <= 1">
+                <span class="material-icons notranslate">remove</span>
+              </button>
+              <span class="qtd-valor">{{ item.quantity }}</span>
+              <button class="qtd-btn" (click)="aumentarQuantidade(item)">
+                <span class="material-icons notranslate">add</span>
+              </button>
+            </div>
+
+            <div class="item-total">
+              R$ {{ (item.price * item.quantity).toFixed(2) }}
+            </div>
+
+            <button class="btn-remover" (click)="removerItem(item)">
+              <span class="material-icons notranslate">delete_outline</span>
+            </button>
+          </div>
+        }
+
+      </div>
+
+      <!-- Resumo -->
+      <div class="resumo-section">
+        <div class="resumo-card">
+          <h3 class="resumo-titulo">Resumo do Pedido</h3>
+
+          <div class="resumo-linha">
+            <span>Itens selecionados</span>
+            <span>{{ totalItensSelecionados }}</span>
+          </div>
+
+          <div class="resumo-linha total">
+            <span>Total</span>
+            <span>R$ {{ subtotal.toFixed(2) }}</span>
+          </div>
+
+          @if (sucesso) {
+            <div class="mensagem-sucesso">
+              <span class="material-icons notranslate">check_circle</span>
+              Compra finalizada com sucesso!
+            </div>
+          }
+
+          <button
+            class="btn-finalizar"
+            (click)="finalizarCompra()"
+            [disabled]="itensSelecionados.length === 0 || finalizando"
+          >
+            @if (finalizando) {
+              <span class="material-icons notranslate spinning">sync</span>
+              Finalizando...
+            } @else {
+              <span class="material-icons notranslate">shopping_bag</span>
+              Finalizar Compra
+            }
+          </button>
+
+          <button class="btn-continuar-comprando" (click)="voltar()">
+            Continuar Comprando
+          </button>
+        </div>
+      </div>
+
+    </div>
+  }
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span class="footer-logo">AllStore</span>
+    <span class="footer-copy">© 2026 All rights reserved</span>
+  </footer>
+
+</div>

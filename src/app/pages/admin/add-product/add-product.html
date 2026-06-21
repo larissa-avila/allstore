@@ -4,7 +4,7 @@
   <header class="header">
     <div class="header-left">
       <button class="btn-voltar" (click)="cancelar()">
-        <span class="material-icons">arrow_back</span>
+        <span class="material-icons notranslate">arrow_back</span>
       </button>
       <h1 class="logo">All Store</h1>
     </div>
@@ -16,7 +16,7 @@
   <!-- Breadcrumb -->
   <div class="breadcrumb">
     <span (click)="cancelar()" class="breadcrumb-link">Produtos</span>
-    <span class="material-icons" style="font-size:16px;color:#bbb">chevron_right</span>
+    <span class="material-icons notranslate" style="font-size:16px;color:#bbb">chevron_right</span>
     <span>{{ isEdicao ? 'Editar Produto' : 'Novo Produto' }}</span>
   </div>
 
@@ -41,13 +41,13 @@
               <span [class.placeholder]="!produto.category">
                 {{ getCategoryName() || 'Selecione uma categoria' }}
               </span>
-              <span class="material-icons dropdown-arrow" [class.aberto]="dropdownAberto">expand_more</span>
+              <span class="material-icons notranslate dropdown-arrow" [class.aberto]="dropdownAberto">expand_more</span>
             </div>
 
             @if (dropdownAberto) {
             <div class="dropdown-panel" (click)="$event.stopPropagation()">
               <div class="dropdown-busca">
-                <span class="material-icons">search</span>
+                <span class="material-icons notranslate">search</span>
                 <input type="text" placeholder="Buscar categoria..." [(ngModel)]="categoriaSearch"
                   (ngModelChange)="filterCategories()" />
               </div>
@@ -107,14 +107,14 @@
   <!-- Mensagens -->
   @if (erro) {
   <div class="mensagem erro-msg">
-    <span class="material-icons">error_outline</span>
+    <span class="material-icons notranslate">error_outline</span>
     {{ erro }}
   </div>
   }
 
   @if (sucesso) {
   <div class="mensagem sucesso-msg">
-    <span class="material-icons">check_circle</span>
+    <span class="material-icons notranslate">check_circle</span>
     Produto {{ isEdicao ? 'atualizado' : 'cadastrado' }} com sucesso! Redirecionando...
   </div>
   }
@@ -126,10 +126,10 @@
     </button>
     <button class="btn-salvar" (click)="salvar()" [disabled]="salvando">
       @if (salvando) {
-      <span class="material-icons spinning">sync</span>
+      <span class="material-icons notranslate spinning">sync</span>
       Salvando...
       } @else {
-      <span class="material-icons">save</span>
+      <span class="material-icons notranslate">save</span>
       {{ isEdicao ? 'Alterar' : 'Cadastrar' }}
       }
     </button>

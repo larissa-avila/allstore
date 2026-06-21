@@ -4,14 +4,14 @@
   <header class="header">
     <div class="header-left">
       <button class="menu-toggle" (click)="toggleMenu()">
-        <span class="material-icons">menu</span>
+        <span class="material-icons notranslate">menu</span>
       </button>
       <h1 class="logo">All Store</h1>
       <span class="badge-admin">Admin</span>
     </div>
     <div class="header-right">
       <span class="usuario">
-        <span class="material-icons" style="font-size:18px;vertical-align:middle">person</span>
+        <span class="material-icons notranslate" style="font-size:18px;vertical-align:middle">person</span>
         {{ getUser()?.firstName }}
       </span>
       <button class="btn-logout" (click)="logout()">Sair</button>
@@ -31,7 +31,7 @@
       <div class="sidebar-header">
         <span class="categorias-titulo">Categorias</span>
         <button class="sidebar-close" (click)="closeMenu()">
-          <span class="material-icons">close</span>
+          <span class="material-icons notranslate">close</span>
         </button>
       </div>
       <div class="categorias-lista">
@@ -52,17 +52,17 @@
       <!-- Topo -->
       <div class="topo-principal">
         <div class="busca-container">
-          <span class="material-icons busca-icone">search</span>
+          <span class="material-icons notranslate busca-icone">search</span>
           <input type="text" class="busca-input" placeholder="Buscar produto..." [(ngModel)]="searchQuery"
             (ngModelChange)="search()" />
           @if (searchQuery) {
           <button class="busca-clear" (click)="searchQuery = ''; search()">
-            <span class="material-icons">close</span>
+            <span class="material-icons notranslate">close</span>
           </button>
           }
         </div>
         <button class="btn-adicionar" (click)="goToAddProduct()">
-          <span class="material-icons">add</span>
+          <span class="material-icons notranslate">add</span>
           <span class="btn-texto">Novo Produto</span>
         </button>
       </div>
@@ -79,7 +79,7 @@
       </div>
       } @else if (paginatedProducts.length === 0) {
       <div class="vazio">
-        <span class="material-icons" style="font-size:48px;color:#ddd">inventory_2</span>
+        <span class="material-icons notranslate" style="font-size:48px;color:#ddd">inventory_2</span>
         <p>Nenhum produto encontrado.</p>
       </div>
       } @else {
@@ -101,18 +101,18 @@
               <p class="produto-preco">R$ {{ produto.price }}</p>
               @if (produto.rating) {
               <span class="produto-rating">
-                <span class="material-icons" style="font-size:14px">star</span>
+                <span class="material-icons notranslate" style="font-size:14px">star</span>
                 {{ produto.rating }}
               </span>
               }
             </div>
             <div class="acoes">
               <button class="btn-editar" (click)="editProduct(produto)">
-                <span class="material-icons">edit</span>
+                <span class="material-icons notranslate">edit</span>
                 Editar
               </button>
               <button class="btn-deletar" (click)="deleteProduct(produto)">
-                <span class="material-icons">delete</span>
+                <span class="material-icons notranslate">delete</span>
                 Excluir
               </button>
             </div>
@@ -124,7 +124,7 @@
       @if (totalPages > 1) {
       <div class="paginacao">
         <button class="pag-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
-          <span class="material-icons">chevron_left</span>
+          <span class="material-icons notranslate">chevron_left</span>
         </button>
         @for (page of getPages(); track page) {
 
@@ -144,7 +144,7 @@
 
         }
         <button class="pag-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">
-          <span class="material-icons">chevron_right</span>
+          <span class="material-icons notranslate">chevron_right</span>
         </button>
       </div>
       }
@@ -156,15 +156,15 @@
   <!-- Footer mobile -->
   <nav class="bottom-nav">
     <button class="bottom-btn" (click)="toggleMenu()">
-      <span class="material-icons">category</span>
+      <span class="material-icons notranslate">category</span>
       <span>Categorias</span>
     </button>
     <button class="bottom-btn" (click)="goToAddProduct()">
-      <span class="material-icons">add_circle</span>
+      <span class="material-icons notranslate">add_circle</span>
       <span>Adicionar</span>
     </button>
     <button class="bottom-btn" (click)="logout()">
-      <span class="material-icons">logout</span>
+      <span class="material-icons notranslate">logout</span>
       <span>Sair</span>
     </button>
   </nav>

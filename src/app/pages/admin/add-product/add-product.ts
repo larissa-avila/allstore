@@ -33,6 +33,8 @@ export class AddProduct implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log('CurrentNavigation', this.router.getCurrentNavigation());
+    console.log('HistoryState', history.state);
     this.apiService.getCategories().subscribe({
       next: (res) => {
         this.categories = res;
@@ -42,8 +44,7 @@ export class AddProduct implements OnInit {
     });
 
     // Recebe produto via navegação (state)
-    const nav = this.router.getCurrentNavigation();
-    const state = nav?.extras?.state as { produto: any };
+    const state = history.state;
 
     if (state?.produto) {
       this.isEdicao = true;

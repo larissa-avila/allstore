@@ -65,4 +65,36 @@ export class ApiService {
     getLocalProductById(id: number): Observable<any> {
         return this.http.get(`${this.localUrl}/products/${id}`);
     }
+
+    updateCartItem(id: number, item: any): Observable<any> {
+        return this.http.put(`${this.localUrl}/cart/${id}`, item);
+    }
+
+    addOrUpdateCart(productId: number, item: any, quantityToAdd: number = 1): Observable<any> {
+        return new Observable(observer => {
+            this.getCart().subscribe({
+                next: (cartItems: any[]) => {
+                    const existing = cartItems.find((c: any) => c.productId === productId);
+
+                    if (existing) {
+                        this.updateCartItem(existing.id, {
+                            ...existing,
+                            quantity: existing.quantity + quantityToAdd
+                        }).subscribe({
+                            next: (res) => observer.next(res),
+                            error: (err) => observer.error(err),
+                            complete: () => observer.complete()
+                        });
+                    } else {
+                        this.addToCart({ ...item, quantity: quantityToAdd }).subscribe({
+                            next: (res) => observer.next(res),
+                            error: (err) => observer.error(err),
+                            complete: () => observer.complete()
+                        });
+                    }
+                },
+                error: (err) => observer.error(err)
+            });
+        });
+    }
 }

@@ -22,8 +22,46 @@
       "updatedAt": "2026-06-19T00:33:30.154Z",
       "createdAt": "2026-06-19T00:33:30.155Z",
       "id": "ypxddew6ETc"
+    },
+    {
+      "originalId": 86,
+      "deleted": true,
+      "id": "VACOKwyCNmI"
     }
   ],
-  "cart": [],
+  "cart": [
+    {
+      "productId": 1,
+      "title": "Essence Mascara Lash Princess",
+      "price": 9.99,
+      "thumbnail": "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/thumbnail.webp",
+      "quantity": 1,
+      "id": "lJLPFCwha1w"
+    },
+    {
+      "productId": 2,
+      "title": "Eyeshadow Palette with Mirror",
+      "price": 19.99,
+      "thumbnail": "https://cdn.dummyjson.com/product-images/beauty/eyeshadow-palette-with-mirror/thumbnail.webp",
+      "quantity": 1,
+      "id": "bzM6-dat2DI"
+    },
+    {
+      "productId": 3,
+      "title": "Powder Canister",
+      "price": 14.99,
+      "thumbnail": "https://cdn.dummyjson.com/product-images/beauty/powder-canister/thumbnail.webp",
+      "quantity": 1,
+      "id": "TWp2DqpgXgk"
+    },
+    {
+      "productId": 4,
+      "title": "Red Lipstick",
+      "price": 12.99,
+      "thumbnail": "https://cdn.dummyjson.com/product-images/beauty/red-lipstick/thumbnail.webp",
+      "quantity": 1,
+      "id": "sVxDIIikSSo"
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }
