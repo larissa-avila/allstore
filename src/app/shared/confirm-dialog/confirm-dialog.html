@@ -1,0 +1,23 @@
+@if (visivel) {
+  <div class="overlay" (click)="cancelar()">
+    <div class="dialog" (click)="$event.stopPropagation()">
+      <div class="dialog-icon" [class.danger]="tipo === 'danger'">
+        <span class="material-icons notranslate">
+          {{ tipo === 'danger' ? 'warning' : 'help_outline' }}
+        </span>
+      </div>
+
+      <h3 class="dialog-titulo">{{ titulo }}</h3>
+      <p class="dialog-mensagem">{{ mensagem }}</p>
+
+      <div class="dialog-actions">
+        <button class="btn-cancelar-dialog" (click)="cancelar()">
+          {{ textoCancelar }}
+        </button>
+        <button class="btn-confirmar-dialog" [class.danger]="tipo === 'danger'" (click)="confirmar()">
+          {{ textoConfirmar }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

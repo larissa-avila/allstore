@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../core/services/api';
 import { AuthService } from '../../../core/services/auth';
+import { ConfirmDialogService } from '../../../core/services/confirm-dialog';
 
 @Component({
   selector: 'app-cart',
@@ -20,8 +21,9 @@ export class Cart implements OnInit {
     private apiService: ApiService,
     private authService: AuthService,
     private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private confirmDialogService: ConfirmDialogService
+  ) { }
 
   ngOnInit(): void {
     this.loadCart();
@@ -77,8 +79,15 @@ export class Cart implements OnInit {
     });
   }
 
-  removerItem(item: any): void {
-    if (!confirm(`Remover "${item.title}" do carrinho?`)) return;
+  async removerItem(item: any): Promise<void> {
+    const confirmado = await this.confirmDialogService.confirm({
+      titulo: 'Remover item',
+      mensagem: `Remover "${item.title}" do carrinho?`,
+      textoConfirmar: 'Remover',
+      tipo: 'danger'
+    });
+
+    if (!confirmado) return;
 
     this.apiService.removeFromCart(item.id).subscribe({
       next: () => {

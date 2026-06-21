@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../core/services/api';
 import { AuthService } from '../../../core/services/auth';
+import { ConfirmDialogService } from '../../../core/services/confirm-dialog';
 
 @Component({
   selector: 'app-home-admin',
@@ -29,7 +30,8 @@ export class HomeAdmin implements OnInit {
     private apiService: ApiService,
     private authService: AuthService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private confirmDialogService: ConfirmDialogService
   ) { }
 
   ngOnInit(): void {
@@ -196,11 +198,17 @@ export class HomeAdmin implements OnInit {
     this.router.navigate(['/admin/add-product'], { state: { produto } });
   }
 
-  deleteProduct(produto: any): void {
-    if (!confirm(`Excluir "${produto.title}"?`)) return;
+  async deleteProduct(produto: any): Promise<void> {
+    const confirmado = await this.confirmDialogService.confirm({
+      titulo: 'Excluir produto',
+      mensagem: `Tem certeza que deseja excluir "${produto.title}"? Esta ação não pode ser desfeita.`,
+      textoConfirmar: 'Excluir',
+      tipo: 'danger'
+    });
+
+    if (!confirmado) return;
 
     if (produto.isLocal) {
-      // Produto local: marca como deletado no JSON Server
       const localItem = this.localProducts.find(p => p.originalId === produto.id || p.id === produto.id);
       if (localItem) {
         this.apiService.updateProduct(localItem.id, { ...localItem, deleted: true }).subscribe({
@@ -208,7 +216,6 @@ export class HomeAdmin implements OnInit {
         });
       }
     } else {
-      // Produto da API: salva no JSON Server com flag deleted
       this.apiService.addProduct({ originalId: produto.id, deleted: true }).subscribe({
         next: () => this.loadAllProducts()
       });

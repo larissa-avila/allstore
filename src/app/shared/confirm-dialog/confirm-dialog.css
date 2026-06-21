@@ -1,0 +1,130 @@
+* {
+  box-sizing: border-box;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.dialog {
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.dialog-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fff5f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.dialog-icon .material-icons {
+  font-size: 28px;
+  color: #f0a090;
+}
+
+.dialog-icon.danger {
+  background: #fdf0f0;
+}
+
+.dialog-icon.danger .material-icons {
+  color: #e74c3c;
+}
+
+.dialog-titulo {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.dialog-mensagem {
+  font-size: 0.92rem;
+  color: #777;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.btn-cancelar-dialog,
+.btn-confirmar-dialog {
+  flex: 1;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.btn-cancelar-dialog {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.btn-cancelar-dialog:hover {
+  background: #e8e8e8;
+}
+
+.btn-confirmar-dialog {
+  background: #1a1a1a;
+  color: #FFD6CE;
+}
+
+.btn-confirmar-dialog:hover {
+  background: #333;
+}
+
+.btn-confirmar-dialog.danger {
+  background: #e74c3c;
+  color: white;
+}
+
+.btn-confirmar-dialog.danger:hover {
+  background: #c0392b;
+}
+
+@media (max-width: 480px) {
+  .dialog {
+    padding: 24px 20px;
+  }
+}
