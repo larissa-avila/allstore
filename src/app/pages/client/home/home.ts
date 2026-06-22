@@ -1,5 +1,5 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../core/services/api';
@@ -80,13 +80,58 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
   loadProducts(): void {
     this.carregando = true;
+
     this.apiService.getProducts().subscribe({
-      next: (res) => {
-        this.allProducts = res.products;
-        this.applyFilters();
-        this.carregando = false;
-        this.cdr.detectChanges();
+      next: (apiProducts) => {
+
+        this.apiService.getLocalProducts().subscribe({
+
+          next: (localProducts) => {
+
+            const deletedIds = localProducts
+              .filter((p: any) => p.deleted)
+              .map((p: any) => p.originalId ?? p.id);
+
+            const editedMap = new Map(
+              localProducts
+                .filter((p: any) => !p.deleted && p.originalId)
+                .map((p: any) => [p.originalId, p])
+            );
+
+            let result = apiProducts.products
+              .filter((p: any) => !deletedIds.includes(p.id))
+              .map((p: any) => {
+
+                if (editedMap.has(p.id)) {
+                  return editedMap.get(p.id);
+                }
+
+                return p;
+              });
+
+            const newProducts = localProducts.filter(
+              (p: any) => !p.originalId && !p.deleted
+            );
+
+            this.allProducts = [
+              ...result,
+              ...newProducts
+            ];
+
+            this.applyFilters();
+            this.carregando = false;
+            this.cdr.detectChanges();
+          },
+
+          error: () => {
+            this.allProducts = apiProducts.products;
+            this.applyFilters();
+            this.carregando = false;
+            this.cdr.detectChanges();
+          }
+        });
       },
+
       error: () => {
         this.carregando = false;
         this.cdr.detectChanges();
@@ -228,5 +273,5 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   goToProfile(): void {
     this.router.navigate(['/profile']);
   }
-  
+
 }
